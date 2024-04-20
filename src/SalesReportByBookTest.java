@@ -1,10 +1,10 @@
 import java.sql.*;
 
-public class TotalSpentByCustomerTest {
+public class SalesReportByBookTest {
     public static void main(String[] args) {
         String url = "jdbc:oracle:thin:@localhost:1521:xe";
-        // 고객 ID를 파라미터로 설정하고 프로시저를 호출하는 SQL 구문
-        String sql = "{call TotalSpentByCustomer(?)}"; // 프로시저 이름과 파라미터
+        // SalesReportByBook 프로시저 호출 구문
+        String sql = "{call SalesReportByBook()}";
 
         try {
             // Oracle JDBC Driver 로드
@@ -14,9 +14,6 @@ public class TotalSpentByCustomerTest {
             try (Connection con = DriverManager.getConnection(url, "c##madang", "madang");
                  // CallableStatement 생성
                  CallableStatement cstmt = con.prepareCall(sql)) {
-
-                // 고객 ID 설정 (예: 1번 고객)
-                cstmt.setInt(1, 2); // 이 부분을 다른 고객 ID로 변경하여 사용 가능
 
                 // 서버 출력을 활성화
                 try (Statement stmt = con.createStatement()) {
@@ -43,8 +40,10 @@ public class TotalSpentByCustomerTest {
                     } while (status == 0);
                 }
             }
-        } catch (Exception e) {
-            System.out.println("ERROR: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Oracle JDBC Driver not found: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Database connection failure: " + e.getMessage());
         }
     }
 }
